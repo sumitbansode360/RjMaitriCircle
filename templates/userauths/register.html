@@ -1,0 +1,128 @@
+{% extends "partials/base.html" %}
+{% load static %}
+
+{% block navbar %}{% endblock %}  <!-- Removes Navbar for Registration Page -->
+
+{% block content %}
+<section class="d-flex justify-content-center align-items-center vh-100">
+    <div class="shadow-lg rounded p-4 w-50">
+        <div class="logo">
+          <img src="{% static '/asset/web_logo.png' %}" alt="" width="300px"><br><br>
+          <h4 class="text-center mb-4">Create a new account</h4>
+          <br>
+      </div>
+       
+
+        <form action="" method="POST" enctype="multipart/form-data" id="register-form">
+            {% csrf_token %}
+            
+            <!-- Step 1: Personal Info -->
+            <div class="step step-1">
+                <h5 class="mb-3" style="color: #7E22CE;">Step 1: Personal Information</h5>
+
+                <div class="form-group">
+                    <label for="full_name" style="color: #7E22CE;">Full Name</label>
+                    {{ form.full_name }}
+                </div>
+
+                <div class="form-group">
+                    <label for="username" style="color: #7E22CE;">Username</label>
+                    {{ form.username }}
+                </div>
+
+                <div class="form-group">
+                    <label for="email" style="color: #7E22CE;">Email</label>
+                    {{ form.email }}
+                </div>
+
+                <button type="button" class="btn btn-primary next-btn" style="background-color: #7E22CE; border: none;">Next</button>
+            </div>
+
+            <!-- Step 2: Additional Info -->
+            <div class="step step-2 d-none">
+                <h5 class="mb-3" style="color: #7E22CE;">Step 2: Additional Information</h5>
+
+                <div class="form-group">
+                    <label for="gender" style="color: #7E22CE;">Gender</label>
+                    {{ form.gender }}
+                </div>
+
+                <div class="form-group">
+                    <label for="valid_doc" style="color: #7E22CE;">Upload ID/Supporting Document</label>
+                    {{ form.valid_doc }}
+                </div>
+
+                <button type="button" class="btn btn-secondary prev-btn">Back</button>
+                <button type="button" class="btn btn-primary next-btn" style="background-color: #7E22CE; border: none;">Next</button>
+            </div>
+
+            <!-- Step 3: Security -->
+            <div class="step step-3 d-none">
+                <h5 class="mb-3" style="color: #7E22CE;">Step 3: Security</h5>
+
+                <div class="form-group">
+                    <label for="password1" style="color: #7E22CE;">Password</label>
+                    {{ form.password1 }}
+                </div>
+
+                <div class="form-group">
+                    <label for="password2" style="color: #7E22CE;">Confirm Password</label>
+                    {{ form.password2 }}
+                </div>
+
+                <button type="button" class="btn btn-secondary prev-btn">Back</button>
+                <button type="submit" class="btn btn-success" style="background-color: #7E22CE; border: none;">Register</button>
+            </div>
+
+            <!-- Error Messages -->
+            {% if form.errors %}
+            <div class="alert alert-danger mt-3">
+                <ul class="mb-0">
+                    {% for field, errors in form.errors.items %}
+                        <li><strong>{{ field|capfirst }}:</strong> {{ errors|join:", " }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endif %}
+        </form>
+
+        <p class="text-center mt-3">Already have an account? <a href="{% url 'sign-in' %}" style="color: #7E22CE;">Sign in</a></p>
+    </div>
+</section>
+
+<!-- Step Navigation JavaScript -->
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    const steps = document.querySelectorAll(".step");
+    const nextBtns = document.querySelectorAll(".next-btn");
+    const prevBtns = document.querySelectorAll(".prev-btn");
+    let currentStep = 0;
+
+    function showStep(step) {
+        steps.forEach((el, index) => {
+            el.classList.toggle("d-none", index !== step);
+        });
+    }
+
+    nextBtns.forEach(btn => {
+        btn.addEventListener("click", function() {
+            if (currentStep < steps.length - 1) {
+                currentStep++;
+                showStep(currentStep);
+            }
+        });
+    });
+
+    prevBtns.forEach(btn => {
+        btn.addEventListener("click", function() {
+            if (currentStep > 0) {
+                currentStep--;
+                showStep(currentStep);
+            }
+        });
+    });
+
+    showStep(currentStep); // Initialize first step
+});
+</script>
+{% endblock content %}

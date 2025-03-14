@@ -1,0 +1,327 @@
+{% load static %}
+{% block header %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Responsive Navbar</title>
+    
+
+    <link href="{% static '/style/log_in.css' %}" rel="stylesheet">
+    <link href="{% static '/style/new_post.css' %}" rel="stylesheet">
+    <link href="{% static '/style/profile.css' %}" rel="stylesheet">
+    <link href="{% static '/style/home.css' %}" rel="stylesheet">
+    
+    
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    
+    {% block sweet %}
+        <!--sweet alert-->
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    {% endblock sweet %}
+    
+    <!-- Load jQuery Full version -->
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+
+    <!-- Load Popper.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.1/umd/popper.min.js"></script>
+
+    <!-- Load Bootstrap JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <!--jQuery-->
+    
+    <!-- htmx -->
+    <script src="https://unpkg.com/htmx.org@1.9.12"></script>
+    <script src="https://unpkg.com/htmx.org@1.9.12/dist/ext/ws.js"></script>
+
+
+    <!--hyperscript-->
+    <script src="https://unpkg.com/hyperscript.org@0.9.12"></script>
+
+
+    {% block toast %}
+        <!-- Toastr CSS -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+        <!-- Toastr JS -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    {% endblock toast %}
+    <style>
+        .comment-section {
+            display: flex;
+            flex-direction: column;
+        }
+
+        @media (min-width: 1200px) {
+
+            .container,
+            .container-lg,
+            .container-md,
+            .container-sm,
+            .container-xl {
+                max-width: 738px;
+            }
+        }
+
+        .liked {
+            background-color: #7E22CE; /* Purple color */
+            color: #fff;
+        }
+        /* chat */
+        {% block chat %}
+            
+        {% endblock chat %}
+    </style>
+    
+
+
+    
+</head>
+
+<body>
+    {% block navbar %}
+        <nav class="navbar navbar-expand-lg navbar-light fixed-top">
+            <div class="container-fluid">
+                <!-- Brand Name -->
+                <a href="{% url "index" %}" class="navbar-brand"><img src="{% static '/asset/web_logo.png' %}" style="height: 47px"></a>
+
+                <!-- Toggler/collapsibe Button -->
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <!-- Navbar Links -->
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav ml-auto">
+                        <!-- Centered Search Bar -->
+                        <li class="nav-item mx-auto">
+                            <div class="navbar-search">
+                                <form action="{% url "search" %}" method="get" class="search-form">
+                                    <input type="search" name="search" value="{{ request.GET.search }}" />
+                                    <button type="submit" class="search-button">Search</button>
+                                </form>
+                            </div>
+                        </li>
+                    </ul>
+                    <ul class="nav-icon navbar-nav ml-auto">               
+                        <li class="nav-item">
+                            <a class="nav-link mx-3 my-2" href="{% url "index" %}" data-toggle="tooltip" title="Go to Home"><i class="fas fa-home fa-lg"
+                                    style="color: #7E22CE;"></i></a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link mx-3 my-2" href="{% url "NewPost" %}" data-toggle="tooltip" title="Add New Post"><i class="fas fa-plus-circle fa-lg" 
+                                style="color: #7E22CE;"></i></a>
+                        </li>
+                        <li class="nav-item position-relative">
+                            <a class="nav-link mx-3 my-2" href="{% url "noti-list" %}" data-toggle="tooltip" title="Notifications"><i class="fas fa-bell fa-lg"
+                                    style="color: #7E22CE;"></i><span id="notification-count" class="badge mx-3 my-3 {% if unread_count == 0 %} d-none {% endif %}">{{unread_count}}</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link mx-3 my-2" href="{% url "ProfileView" request.user %}" data-toggle="tooltip" title="Profile"><i class="fas fa-user fa-lg"
+                                    style="color: #7E22CE;"></i></a>
+                        </li>
+                        <li class="nav-item position-relative">
+                            <a class="nav-link mx-3 my-2" href="{% url "home" %}" data-toggle="tooltip" title="Messages"><i class="fas fa-comments fa-lg" 
+                                style="color: #7E22CE;"></i><span id="notification-badge" class="badge mx-3 my-3 {% if unread_message_count == 0 %} d-none {% endif %}">{{ unread_message_count }}</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    {% endblock navbar %}
+
+{% endblock header %}
+
+{% block content %}
+
+
+
+
+
+{% endblock content %}
+
+{% block javascript %}{% endblock javascript %}
+
+
+</body>
+{% block footer %}
+<script>
+    {% comment %} profile {% endcomment %}
+    $(document).ready(function () {
+        $(".toggle-section").on("click", function () {
+            const target = $(this).data("target"); // Get the target section
+            $(target).slideToggle(); // Toggle the section visibility
+        });
+    });
+    
+    {% comment %} endprofile {% endcomment %}
+    $(document).ready(function () {
+        $(".heart").on("click", function () {
+            const heart = $(this);
+            const postUrl = heart.closest("a").attr("href"); // Get the like URL
+    
+            // Make an AJAX POST request to toggle the like
+            $.ajax({
+                url: postUrl,
+                method: "POST",
+                headers: {
+                    "X-CSRFToken": getCookie("csrftoken") // Include CSRF token for security
+                },
+                success: function (response) {
+                    // Toggle the is-active class to change color
+                    if (response.liked) {
+                        heart.addClass("is-active");
+                    } else {
+                        heart.removeClass("is-active");
+                    }
+    
+                    // Optionally update a like count display (if you have one)
+                    const likeCountElement = heart.closest(".post").find(".like-count");
+                    if (likeCountElement.length) {
+                        likeCountElement.text(response.like_count);
+                    }
+                },
+                error: function () {
+                    console.error("Failed to update the like status.");
+                }
+            });
+    
+            // Prevent the default action of the link
+            return false;
+        });
+    
+        // Helper function to get CSRF token
+        function getCookie(name) {
+            const cookieValue = document.cookie
+                .split("; ")
+                .find(row => row.startsWith(name + "="))
+                ?.split("=")[1];
+            return cookieValue;
+        }
+    });
+    {% comment %} saved {% endcomment %}
+
+    toastr.options = {
+        "closeButton": true,
+        "progressBar": true,
+        "positionClass": "toast-bottom-right",
+        "timeOut": "3000",
+    };
+    
+    $(document).ready(function () {
+        $(".save-button").on("click", function (event) {
+            event.preventDefault();
+            
+            const postId = $(this).data("post-id"); // Get post_id from data-post-id attribute
+            const icon = $(this).find("i");
+    
+            // Send AJAX request to the server to save the post
+            $.ajax({
+                url: '/saved/' + postId + '/',  // URL path to the Django view
+                method: 'POST',
+                data: {
+                    'csrfmiddlewaretoken': $('input[name="csrfmiddlewaretoken"]').val(),  // Add CSRF token
+                },
+                success: function(response) {
+                    if (response.saved) {
+                        icon.removeClass("fa-regular").addClass("fa-solid");
+                        toastr.success("Post saved to your profile!");
+                        console.log('Post saved:', response.saved);
+                    } else {
+                        icon.removeClass("fa-solid").addClass("fa-regular");
+                        toastr.info("Post unsaved.");
+                        console.log('Post removed from your profile', response.saved);
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error saving post:', error);
+                    toastr.error("Error saving the post. Please try again.");
+
+                }
+            });
+        });
+    });
+    
+    {% comment %} saved end {% endcomment %}
+
+    
+    {% for message in messages %}
+        Swal.fire({
+            icon: "{{ message.tags }}",
+            title: "{{ message }}",
+            text: "{{ message.tags }}",
+            timer: 4000
+        });
+    {% endfor %}
+    
+    {% comment %} notification {% endcomment %}
+    
+    let socket = new WebSocket("ws://127.0.0.1:8000/ws/notifications/");
+
+  
+    socket.onmessage = function(event) {
+        let data = JSON.parse(event.data);
+
+        if (data.unread_notification !== undefined) {
+            let notificationCountElement = document.getElementById("notification-count");
+            
+            let count = data.unread_notification;
+            console.log("🔔 Updating Notification Count:", count); // Debugging
+
+            if (notificationCountElement) {
+                console.log("element found") // Debugging
+                if (count > 0) {
+                    console.log("count is ", count)
+                    notificationCountElement.classList.remove("d-none"); // ✅ Show badge
+                    notificationCountElement.innerText = count;
+                } else {
+                    notificationCountElement.classList.add("d-none"); // ✅ Hide badge
+                }
+            }
+        }
+
+    
+
+        if (data.unread_message_counts) {
+            Object.keys(data.unread_message_counts).forEach(senderId => {
+                let unreadCount = data.unread_message_counts[senderId];
+                let badge = document.getElementById(`unread-${senderId}`);
+
+                if (badge) {
+                    if (unreadCount > 0) {
+                        badge.innerText = unreadCount;
+                        badge.classList.remove("d-none"); // Show badge
+                    } else {
+                        badge.classList.add("d-none"); // Hide badge if 0
+                    }
+                }
+            });
+        }
+
+        if (data.total_unread_count !== undefined) {
+            let notificationBadge = document.getElementById("notification-badge");
+
+            let count = data.total_unread_count;
+            console.log("Total unread count:", count); // Debugging
+
+            if (notificationBadge) {
+                if (count > 0) {
+                    notificationBadge.classList.remove("d-none");
+                    notificationBadge.innerText = count; // ✅ Update badge
+                } else {
+                    notificationBadge.classList.add("d-none"); // Hide if 0
+                }
+            }
+        }
+    }
+</script>
+  
+
+
+</html>
+{% endblock footer %}

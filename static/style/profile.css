@@ -1,0 +1,223 @@
+/* Custom styles */
+.profile-header {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.profile-image img {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.btn-custom {
+    padding: 10px 15px;
+    background-color: #7E22CE;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    height:40px;
+}
+
+.btn-custom:hover {
+    background-color: #5a189a;
+}
+
+.stats {
+    color: #333;
+    margin: 15px 0;
+}
+
+.profile-stat-count {
+    font-weight: bold;
+    color: #7E22CE;
+}
+
+/* Bio Section Styling */
+#bio-section {
+    background-color: #f8f8f8;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    margin-top: 20px;
+}
+
+.bio-header {
+    background-color: white;
+    padding: 15px;
+    margin-bottom: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.bio-title {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #7D22CE;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+}
+
+.bio-text {
+    font-size: 1rem;
+    color: #333;
+    line-height: 1.5;
+    margin-bottom: 0;
+}
+
+.bio-header:hover {
+    background-color: #f3f3f3;
+    border-left: 4px solid #7D22CE;
+    cursor: pointer;
+}
+
+.bio-header p {
+    font-weight: normal;
+    color: #555;
+    font-size: 1rem;
+    line-height: 1.6;
+}
+
+/* Hover effects for each bio section */
+.bio-header:hover .bio-title {
+    color: #7D22CE;
+    text-decoration: underline;
+}
+
+/* Add some spacing around the section */
+.section-content {
+    padding-top: 30px;
+    padding-bottom: 30px;
+}
+
+.section-content {
+    padding-top: 30px;
+    padding-bottom: 30px;
+}
+
+.tabs {
+    text-align: center;
+    font-weight: bold;
+    margin-top: 20px;
+}
+
+.tabs a {
+    color: #7E22CE;
+    margin: 0 15px;
+    text-decoration: none;
+}
+/* Gallery */
+.gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 15px;
+}
+
+.gallery-item {
+    position: relative;
+    overflow: hidden;
+    border-radius: 8px;
+}
+
+.gallery-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Gallery Item Info */
+.gallery-item-info {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    color: #fff;
+    display: flex;
+    justify-content: space-around;
+    padding: 5px 0;
+}
+
+.gallery-item-likes, .gallery-item-comments {
+    font-size: 14px;
+}
+
+
+
+button.toggle-section {
+    margin-bottom: 10px;
+    padding: 10px 15px;
+    background-color: #7E22CE;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 120px;
+}
+
+button.toggle-section:hover {
+    background-color: #5d1998;
+}
+/* Links Section Styling */
+#links-section {
+    background-color: #f8f8f8;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    margin-top: 20px;
+}
+
+.links-header {
+    background-color: white;
+    padding: 15px;
+    margin-bottom: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.links-title {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #7D22CE;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+}
+
+.links-list {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+}
+
+.social-link {
+    font-size: 1rem;
+    color: #333;
+    text-decoration: none;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.social-link i {
+    font-size: 1.2rem;
+    color: #7D22CE;
+}
+
+.social-link:hover {
+    color: #7D22CE;
+    text-decoration: underline;
+}
+
+/* Hover effects */
+.links-header:hover {
+    background-color: #f3f3f3;
+    border-left: 4px solid #7D22CE;
+    cursor: pointer;
+}
+
+.links-header:hover .links-title {
+    color: #7D22CE;
+    text-decoration: underline;
+}

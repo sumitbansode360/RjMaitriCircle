@@ -1,0 +1,20 @@
+{% extends "partials/base.html" %}
+{% load static %}
+{% block content %}
+
+    <div class="container card mt-5">
+        <h4 class="text-center fw-bold my-3" style="color:#7D22CE">Your Follower List</h4>
+        {% for follower in following %}
+            <div class="user-card d-flex align-items-center p-3 mb-3 rounded-3">
+                <div class="user-avatar">
+                <a href="{% url "ProfileView" follower.profile.user %}"><img src="{{follower.profile.image.url}}" alt="User Picture" class="rounded-circle mx-3" width="75px" height="75px"></a>
+                </div>
+                <div class="user-info ms-3 mx-3">
+                <a style="color:#7D22CE" href="{% url "ProfileView" follower.profile.user %}" class="user-name fw-bold d-block"><h5>{{follower.profile.full_name}}</h5></a>
+                <span class="user-username text-muted"><h5>@{{follower.profile.user.username}}</h5></span>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+   
+{% endblock %}

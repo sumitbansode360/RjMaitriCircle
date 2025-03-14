@@ -1,0 +1,24 @@
+{% extends "partials/base.html" %}
+{% load static %}
+{% block content %}
+<main>
+    <h2 class="my-3 mx-auto text-center" style="color:#7D22CE; font-weight:bold;">#{{tag}}</h3>
+    <div class="container">
+        <div class="gallery">
+            {% for post in posts %}
+                <a href="{{ post.get_absolute_url }}" class="gallery-item">
+                    <img src="{{ post.image.url }}" alt="Post Image">
+                    <div class="gallery-item-info">
+                        <ul>
+                            <li class="gallery-item-likes"><i class="fas fa-heart"></i> {{post.likes}}</li>
+                            <li class="gallery-item-comments"><i class="fas fa-comment"></i> 45</li>
+                        </ul>
+                    </div>
+                </a>     
+            {% endfor %}
+            <!-- Repeat gallery items as needed -->
+        </div>
+    </div>
+</main>
+
+{% endblock content %}

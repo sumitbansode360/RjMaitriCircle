@@ -1,0 +1,159 @@
+
+{% extends "partials/base.html" %}
+{% load static %}
+{% block content %}
+
+<div class="container">
+    <!-- Profile Header -->
+    <div class="profile-header">
+        <div class="profile-image">
+            <img src="{{profile.image.url}}" alt="Profile Image">
+        </div>
+        <h2  class="mt-3" style="color:#7D22CE; font-weight:bold;">{{profile.full_name|title}}</h2>
+        <h3 class="text-secondary">@{{profile.user.username}}</h3>
+
+        <!-- Edit and Logout Buttons -->
+        {% if request.user == profile.user %}
+            <div class="d-flex justify-content-center gap-2 mt-2">
+                <a href="{% url "EditProfileView" %}"><button class="btn-custom mx-2">Edit</button></a>
+                <a href="{% url "sign-out" %}"><button class="btn-custom">Log out</button></a>
+            </div>
+        {% endif %}
+        <!-- Profile Stats -->
+        <div class="d-flex justify-content-center stats mt-3">
+            <div class="mx-3"><span class="profile-stat-count">{{post_count}} Posts</span></div>
+            <div class="mx-3"><a href="{% url "Follower_List" profile.user %}"><span class="profile-stat-count">{{follower_count}} Followers</span></a></div>
+            <div class="mx-3"><a href="{% url "Following_List" profile.user %}"><span class="profile-stat-count">{{following_count}} Following</span></a></div>
+        </div>
+
+        <!-- Follow and Message Buttons -->
+        {% if not request.user == profile.user %}
+            <div class="d-flex justify-content-center gap-2 mt-2">
+                {% if follow_status %}
+                    <a href="{% url "FollowView" profile.user.username 0 %}"><button class="btn btn-outline-danger mx-3">UnFollow</button></a>
+                {% else %}
+                    <a href="{% url "FollowView" profile.user.username 1 %}"><button class="btn btn-outline-success mx-3">Follow</button></a>
+                {% endif %} 
+                {% if profile.user != request.user %}
+                    <br><br><br><a href="{% url "start-chat" profile.user.username %}"><button class="btn-custom">Message</button></a>
+                {% endif %}
+            </div>
+        {% endif %}
+        {% comment %} rod {% endcomment %}
+        <div class="profile-container">
+            <!-- Bio Section -->
+            <div class="profile-section">
+                <button class="toggle-section" data-target="#bio-section">View Bio</button>
+                <div id="bio-section" class="section-content">
+                    <div class="bio-header">
+                        <h4 class="bio-title">Summary</h4>
+                        <p class="bio-text">{{ profile.bio | safe }}</p>
+                    </div>
+                
+                    <div class="bio-header">
+                        <h4 class="bio-title">Skills</h4>
+                        <p class="bio-text">{{ profile.skills }}</p>
+                    </div>
+                
+                    <div class="bio-header">
+                        <h4 class="bio-title">Education</h4>
+                        <p class="bio-text">{{ profile.education }}</p>
+                    </div>
+                
+                    <div class="bio-header">
+                        <h4 class="bio-title">Education Level</h4>
+                        <p class="bio-text">{{ profile.student_type }}</p>
+                    </div>
+                
+                    <div class="bio-header">
+                        <h4 class="bio-title">Date of Join</h4>
+                        <p class="bio-text">{{ profile.year_of_join }}</p>
+                    </div>
+                
+                    <div class="bio-header">
+                        <h4 class="bio-title">Date of Passout</h4>
+                        <p class="bio-text">{{ profile.year_of_passout }}</p>
+                    </div>
+                
+                    <div class="bio-header">
+                        <h4 class="bio-title">Experience</h4>
+                        <p class="bio-text">{{ profile.experience }}</p>
+                    </div>
+                
+                    <div class="bio-header">
+                        <h4 class="bio-title">Location</h4>
+                        <p class="bio-text">{{ profile.location }}</p>
+                    </div>
+                </div>
+                
+            </div>
+        
+            <!-- Links Section -->
+            <div class="profile-section">
+                <button class="toggle-section" data-target="#links-section">View Links</button>
+                <div id="links-section" class="section-content">
+                    <div class="links-header">
+                        <h4 class="links-title">Social Links</h4>
+                        <div class="links-list">
+                            {% if profile.instagram %}
+                            <a href="{{ profile.instagram }}" target="_blank" class="social-link">
+                                <i class="fa-brands fa-instagram"></i> Instagram
+                            </a>
+                            {% endif %}
+                            {% if profile.git %}
+                            <a href="{{ profile.git }}" target="_blank" class="social-link">
+                                <i class="fa-brands fa-github"></i> GitHub
+                            </a>
+                            {% endif %}
+                            {% if profile.linkdn %}
+                            <a href="{{ profile.linkdn }}" target="_blank" class="social-link">
+                                <i class="fa-brands fa-linkedin"></i> LinkedIn
+                            </a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+            
+        </div>
+               
+      {% comment %} end {% endcomment %}
+        
+    </div>
+
+    <!-- Posts and Saved Tabs -->
+    <div class="tabs mt-4">
+        {% if url_name == "ProfileView" %}
+            <a href="{% url "ProfileView" profile.user%}" style="color:red; text-decoration:underline;">Posts</a>
+        {% else %}
+            <a href="{% url "ProfileView" profile.user %}" class="active">Posts</a>
+        {% endif %}
+
+        {% if url_name == "Saved" %}
+            <a href="{% url "Saved" profile.user %}" style="color:red; text-decoration:underline;">Save Posts</a>
+        {% else %}
+            <a href="{% url "Saved" profile.user %}" class="active">Save Posts</a>
+        {% endif %}
+    </div>
+
+    <!-- Gallery Section -->
+<main>
+    <div class="container">
+        <div class="gallery">
+            {% for post in posts %}
+                <a href="{{ post.get_absolute_url }}" class="gallery-item">
+                    <img src="{{ post.image.url }}" alt="Post Image">
+                    <div class="gallery-item-info">
+                        <ul>
+                            <li class="gallery-item-likes"><i class="fas fa-heart"></i> {{post.likes}}</li>
+                            <li class="gallery-item-comments"><i class="fas fa-comment"></i> {{post.comments.count}}</li>
+                        </ul>
+                    </div>
+                </a>
+            {% endfor %}
+            <!-- Repeat gallery items as needed -->
+        </div>
+    </div>
+</main>
+{% endblock %}

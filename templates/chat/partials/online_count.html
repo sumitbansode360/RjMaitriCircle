@@ -1,0 +1,11 @@
+
+<button id="online-count" class="btn btn-primary btn-sm mr-1 px-3" hx-swap-oob="outerHTML">
+    {{ online_count }} online
+</button>
+
+
+{% if online_count %}
+    <span id="online-icon" class="fas fa-circle msg-chat-online"></span>                           
+{% else %}
+    <span id="online-icon" class="fas fa-circle msg-chat-offline"></span>          
+{% endif %}

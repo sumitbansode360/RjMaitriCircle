@@ -1,0 +1,10 @@
+{% if message.body %}
+    {{ message.body }}
+{% elif message.file %}
+    {% if message.is_image %}
+        <img style="width:200px; height200px;" src="{{message.file.url}}"/>
+    {% else %}
+        <a href="{{message.file.url}}">{{message.filename}}</a>
+    {% endif %}
+
+{% endif %}

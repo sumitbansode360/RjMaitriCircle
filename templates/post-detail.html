@@ -1,0 +1,202 @@
+{% extends "partials/base.html" %}
+{% load static %}
+{% load custom_filters %}
+
+{% block sweet %}
+
+{% endblock sweet %}
+{% block content %}
+
+    <!-- main page -->
+    <div class="main-sec  my-4">
+        <div class="row">
+            <div class="col-8">
+            </div>
+            <div class="container post">
+                <div class="posts">
+                    <article class="post-ar mb-4">
+                        <div class="post__header d-flex justify-content-between align-items-center">
+                            <div class="post__profile d-flex align-items-center">
+                                <a href="{% url "ProfileView" post.user %}" class="post__avatar">
+                                    <img src="{{post.user.profile.image.url}}" alt="User Picture" class="rounded-circle mx-2 my-2"
+                                    width="50px" height="50px" style="object-fit: cover;">
+                                </a>
+                                <a href="{% url "ProfileView" post.user %}" class="post__user ms-2">{{post.user.username}}</a>
+                            </div>
+                            {% if request.user == post.user %}
+                                <div class="dropdown mx-3">
+                                    <i class="fa-solid fa-ellipsis dropdown-toggle" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" role="button" ></i>
+                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                    <a class="dropdown-item" href="{% url "UpdatePost" post.id %}"><i class="fa-solid fa-pen" style="color: #7E22CE;"></i>&nbsp&nbsp update</a>
+                                    <a class="dropdown-item" href="{% url "DeletePost" post.id %}"><i class="fa-solid fa-trash" style="color: rgb(227, 14, 14);"></i>&nbsp&nbsp   delete</a>
+                                    </div>
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="post__content">
+                            <div class="post__medias">
+                                <a href="{{post.image.url}}">
+                                    <img class="post__media img-fluid" src="{{post.image.url}}" alt="Post Content">
+                                </a>
+                            </div>
+                        </div>
+                        <div class="post__footer">
+                            <div class="post__buttons">
+                                <div class="post-like" id="post-{{ post.id }}">
+                                    <a href="{% url 'PostLike' post.post_id %}">
+                                        <div 
+                                            class="heart {% if user in post.liked_by.all %}is-active{% endif %}" 
+                                            data-toggle="tooltip" 
+                                            data-placement="top" 
+                                            title="Like this post">
+                                        </div>
+                                    </a>
+                                    <span class="like-count mx-2">{{ post.likes }} Likes</span>
+                                </div>
+                                <div class="comment-save mx-3 my-2">
+                                    <a href="#commentSection" class="post__button mx-3">
+                                        <i class="fa-regular fa-comment fa-xl" style="color: #7E22CE;" data-toggle="tooltip" data-placement="top" title="Add a comment"></i>
+                                    </a>
+                                    <a href="{% url 'SavedPost' post.post_id %}" class="post__button save-button ms-auto" data-post-id="{{ post.id }}">
+                                        <i class="fa-bookmark fa-xl {% if post in profile.saved.all %}fa-solid{% else %}fa-regular{% endif %}" style="color: #7E22CE;" data-toggle="tooltip" data-placement="top" title="Save this post"></i>
+                                        <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+                                    </a>  
+                                </div>
+                            </div>
+
+                            <div class="post__infos mt-1">
+                                <div class="post__likes">
+                                    <span>Liked by - 
+                                        {% for user in post.liked_by.all %}
+                                          {% if user != request.user %}
+                                            <a class="post__name--underline" href="{% url 'ProfileView' user.username %}">{{ user.username }}</a>, 
+                                          {% endif %}
+                                        {% endfor %}
+                                    </span>
+                                </div>
+                                <div class="post__description my-1">
+                                    <span>
+                                        <a class="post__name--underline" href="#"><b>@{{post.user.username}}</b></a> - {{post.caption|safe}}
+                                    </span>
+                                </div>
+                                <span style="font-size: 13px;">
+                                    {% for tag in post.tag.all %}
+                                        <a href="{{tag.get_absolute_url}}" style="color: black; text-decoration: none;">#{{tag.title}}</a>
+                                    {% endfor %}
+                                </span>
+
+                                <span class="post__date-time d-block mt-3">{{post.posted | date:"d, M Y"}}</span>
+                            </div>
+                        </div>
+                    </article>
+                    <!-- suggestion -->
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <!-- comments section -->
+    <div class="container comment-section" id="commentSection">
+        <div class="card my-4">
+            <h5 class="card-header">Leave a Comment:</h5>
+            <div class="card-body">
+                <form action="{% url 'postComment' post.post_id %}" method="post">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <textarea class="form-control" name="comment" rows="3" placeholder="Enter your comment here..." required></textarea>
+                    </div>
+                    <input type="hidden" name="postSno" value="{{ post.post_id }}">
+                    <button type="submit" class="form-btn mt-2">Post comment</button>
+                </form>
+            </div>
+        </div>
+    
+        <!-- Comments Section -->
+        {% for comment in comments %}
+            <div class="media mb-4">
+                <!-- User Profile Image -->
+                <img class="d-flex align-self-start rounded-circle mr-3" 
+                    src="{{ comment.user.profile.image.url }}" 
+                    alt="{{ comment.user.username }}" width="30" height="30">
+                
+                <div class="media-body">
+                    <!-- Commenter's Username and Comment Content -->
+                    <h5 class="mt-0">{{ comment.user.username }}</h5>
+                    <p style="font-size: 14px;">{{ comment.comment }}</p>
+                    <small class="text-muted">{{ comment.timestamp|date:"d/m/Y" }}</small>
+
+                    <!-- Reply Button (Only for logged-in users) -->
+                    <p class="d-inline-flex gap-1">
+                        {% if request.user.is_authenticated %}
+                            <button type="button" class="form-btn mt-2" data-toggle="collapse" 
+                                    data-target="#replyBox{{ comment.sno }}" 
+                                    aria-expanded="false" 
+                                    aria-controls="replyBox{{ comment.sno }}">
+                                Reply
+                            </button>
+                        {% else %}
+                            <p><b>Please login to post a comment</b></p>
+                        {% endif %}
+                    </p>
+
+                    <!-- Reply Form (Hidden initially, shows on button click) -->
+                    <div class="collapse" id="replyBox{{ comment.sno }}">
+                        <div class="card card-body my-2">
+                            <form action="{% url 'postComment' post_id=post.post_id %}" method="post">
+                                {% csrf_token %}
+                                <div class="form-group">
+                                    <label for="comment">Post a reply</label>
+                                    <input type="text" class="form-control" name="comment" placeholder="Enter reply here" required>
+                                    <input type="hidden" name="parentSno" value="{{ comment.sno }}">
+                                </div>
+                                <input type="hidden" name="postSno" value="{{ post.post_id }}">
+                                <button type="submit" class="form-btn mt-2">Post reply</button>
+                            </form>                    
+                        </div>
+                    </div>
+
+                    <!-- Display Replies for the Comment from replyDict -->
+                    <div class="replies my-2 ml-4">
+                        {% for reply in replyDict|get_item:comment.sno %}
+                            <div class="media mb-4">
+                                <!-- Reply User Profile Image -->
+                                <img class="d-flex align-self-start rounded-circle mr-3" 
+                                    src="{{ reply.user.profile.image.url }}" 
+                                    alt="{{ reply.user.username }}" width="30" height="30">
+                                
+                                <div class="media-body">
+                                    <!-- Reply User's Name and Reply Content -->
+                                    <h6 class="mt-0">{{ reply.user.username }}</h6>
+                                    <p style="font-size: 13px;">{{ reply.comment }}</p>
+                                    <small class="text-muted">{{ reply.timestamp|date:"d/m/Y" }}</small>
+                                </div>
+                            </div>
+                        {% empty %}
+                            <p>No replies yet.</p>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <p>No comments yet. Be the first to comment!</p>
+        {% endfor %}
+        <hr>
+    </div>
+    
+    <script type="text/javascript">
+        {% if messages %}
+            {% for message in messages %}
+                toastr.success("{{ message }}", "Success", {
+                    "closeButton": true,
+                    "progressBar": true,
+                    "positionClass": "toast-bottom-right",  // Customize position
+                    "timeOut": 5000  // Duration before auto close (in milliseconds)
+                });
+            {% endfor %}
+        {% endif %}
+    </script>
+
+
+
+{% endblock content %}

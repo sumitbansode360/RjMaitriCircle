@@ -1,0 +1,61 @@
+
+  
+  /* Sign In Section */
+  .signin-section {
+    height: 100vh;
+    background-color: #f9f9f9;
+  }
+  
+  .signin-container {
+    max-width: 900px;
+    background-color: white;
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  
+  .signin-image img {
+    object-fit: cover;
+    height: 100%;
+  }
+  
+  .signin-form {
+    flex: 1;
+  
+  }
+  
+  .signin-form h2 {
+    font-size: 2rem;
+  }
+  
+  .signin-btn {
+    background-color: #7E22CE;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    text-transform: uppercase;
+    transition: background-color 0.3s;
+}
+
+.signin-btn:hover {
+    background-color: #5a189a; /* Darker shade for hover effect */
+}
+
+.signin-btn:active {
+    background-color: #4e1486; /* Even darker shade when active */
+}
+
+  
+  @media (max-width: 768px) {
+    .signin-container {
+      flex-direction: column;
+    }
+  
+    .signin-image {
+      display: none;
+    }
+  }
+  

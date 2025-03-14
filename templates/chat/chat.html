@@ -1,0 +1,160 @@
+{% extends "partials/base.html" %}
+{% load static %}
+{% load custom_filters %}
+{% block chat %}
+    .msg-body { margin-top: 20px; }
+    .msg-chat-online { color: #34ce57; }
+    .msg-chat-offline { color: #B2BEB5; }
+    .msg-chat-messages {
+        display: flex;
+        flex-direction: column;
+        max-height: calc(100vh - 200px); /* Adjust this to fit your layout */
+    }
+    .msg-chat-message-right { flex-direction: row-reverse; margin-left: auto; }
+    .msg-chat-message-left, .msg-chat-message-right { display: flex; flex-shrink: 0; }
+    .msg-chat-message-left { margin-right: auto; }
+    .msg-py-3 { padding-top: 1rem !important; padding-bottom: 1rem !important; }
+    .msg-px-4 { padding-right: 1.5rem !important; padding-left: 1.5rem !important; }
+    .msg-flex-grow-0 { flex-grow: 0 !important; }
+    .msg-border-top { border-top: 1px solid #dee2e6 !important; }
+    .chat-input-container {
+        position: sticky;
+        bottom: 0;
+        background-color: #fff; /* Ensure it doesn't overlap with the background */
+        z-index: 10; /* Keep it above the chat messages */
+    }
+{% endblock chat %}
+{% block content %}
+<div class="container msg-body p-0" style="max-width: 100%;">
+
+    <h1 class="h3 mb-3 text-center" style="color: #6a0dad">Messages</h1>
+  
+    <div class="card">
+        <div class="row no-gutters">
+            <!-- Sidebar (User List) -->
+            <div class="col-12 col-lg-3 border-right msg-chat-messages d-flex flex-column">
+                <div class="px-4 border-bottom">
+                </div>
+                
+                <!-- User Card -->
+                <a href="{% url "home" %}" class="list-group-item list-group-item-action border-0">
+                    <div class="d-flex align-items-start pb-2">
+                        <img src="https://via.placeholder.com/40" class="rounded-circle mr-1" alt="User" width="40" height="40">
+                        <div class="flex-grow-1 ml-3">
+                            <b>Public chat</b>
+                            <div class="small text-muted"><span class="fas fa-circle msg-chat-online"></span> @Rj community</div>
+                        </div>
+                    </div>
+                </a>
+                {% for chatroom in user.chat_groups.all %}
+                    {% if chatroom.is_private %}
+                        {% for member in chatroom.members.all %}
+                            {% if member != user %}
+                            <a href="{% url "chatroom" chatroom.group_name %}" class="list-group-item list-group-item-action border-0 {% if chatroom.group_name == request.resolver_match.kwargs.chatroom_name %}active{% endif %}">
+                                <div class="d-flex align-items-start pb-2">
+                                    <img src="{{member.profile.image.url}}" class="rounded-circle mr-1" alt="User" width="40" height="40">
+                                    <div class="flex-grow-1 ml-3">
+                                        <b>{{ member.profile.full_name }}</b>
+                                       <div class="small text-muted">@{{member.username}}</div>
+                                    </div>
+                                    {% with unread_count=unread_message_counts|get_item:member.id %}
+                                    {% if unread_count and unread_count > 0 %}
+                                        <span id="unread-{{ member.id }}" class="badge bg-danger rounded-pill ml-2" style="top: 22px; right: 28px;">{{ unread_count }}</span>
+                                    {% endif %}
+                                    {% endwith %}
+                                </div>
+                            </a>
+                            {% endif %}
+                        {% endfor %}
+                    {% endif %}
+                {% endfor %}
+                <!-- Add more user cards dynamically -->
+                <hr class="d-block d-lg-none mt-1 mb-0">
+            </div>
+        
+            
+            
+            <!-- Chat Area -->
+            <div class="col-12 col-lg-9">
+                <div class="py-2 px-4 border-bottom">
+                    <div class="d-flex align-items-center justify-content-between">
+                        {% if other_user %}
+                        <div class="suggestion-profile d-flex align-items-center">
+                            <span id="online-icon" class="fas fa-circle msg-chat-online"></span>                            <!-- Profile Picture -->
+                            <a href="{% url "ProfileView" other_user.username %}"><img src="{{ other_user.profile.image.url }}" alt="Profile Picture" class="suggestion-avatar rounded-circle me-2"></a>
+                            <!-- Full Name and Username -->
+                            <div class="ml-2">
+                                <a href="{% url "ProfileView" other_user.username %}"><span class="suggestion-username text-muted">@{{ other_user.username }}</span></a>
+                            </div>
+                         </div>
+                        {% else %}
+                        <div>
+                            <button id="online-count" class="btn btn-primary btn-sm mr-1 px-3"></button>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="position-relative border-top" id="chat_container" style="height: 500px; overflow-y: scroll">
+                    <div id="chat_messages" class="msg-chat-messages p-3">
+                        <!-- Sample chat messages -->
+                        {% for message in chat_messages reversed %}
+                            {% include "chat/chat_message.html" %}
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <!-- Message Input -->
+                <div class="chat-input-container msg-py-3 msg-px-4 msg-border-top">
+                    <div class="input-group">
+                        <!-- Start of form -->
+                        <form class="w-100 d-flex"
+                         hx-ext="ws" 
+                         ws-connect="/ws/chatroom/{{ chatroom_name }}/"
+                         ws-send
+                         _="on htmx:wsAfterSend reset() me">
+                            {% csrf_token %}
+                            <!-- Form field for input -->
+                            <div class="flex-grow-1">
+                                {{ form.body }}
+                            </div>
+                            <!-- Submit button -->
+                            <button class="btn btn-primary ml-2" type="submit">Send</button>
+                        </form>
+                        <!-- End of form -->
+                         {% comment %} file shearing {% endcomment %}
+                         <div class="wrap">
+                            <form action="" id="chat_file_form" enctype= "multipart/form-data" hx-post="{% url 'chat-file-upload' chat_group.group_name %}"
+                            x-target="#chat_messages"
+                            hx-swap="beforeend"
+                            _="on htmx:beforeSend reset() me">
+                            {% csrf_token %}
+                                <input type="file" name="file" id="id_file">
+                                <button class="btn-custom" type="submit">Submit file</button>
+                            </form>
+                         </div>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block javascript %}
+<script>
+    function scrollToBottom(time=0) {
+        setTimeout(function(){
+            var container = document.getElementById("chat_container");
+            container.scrollTop = container.scrollHeight;
+        }, time);
+    }
+    scrollToBottom();
+
+    // // message 
+    // document.addEventListener("DOMContentLoaded", function () {
+    //     // Clear unread notification count when visiting the notification list page
+    //     localStorage.removeItem("unread_message_count");
+    // });
+</script>
+{% endblock javascript %}

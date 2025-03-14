@@ -1,0 +1,245 @@
+
+/* Center align search bar */
+body{
+  padding-top: 70px;
+}
+.form-inline .search-bar {
+  width: 300px;
+  
+}
+
+.navbar {
+  background-color: #fff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  
+  /* display: flex;
+  justify-content: space-between; */
+}
+.navbar .nav-item {
+  margin-right: 15px; /* Adjust as needed */
+  
+}
+
+.navbar-search {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background-color: #4a0072; /* Darker purple background */
+  padding: 5px 10px;
+  border-radius: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: box-shadow 0.3s ease;
+}
+
+.navbar-search:hover {
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+}
+
+.navbar-search input {
+  padding: 8px 12px;
+  border: none;
+  border-radius: 20px;
+  outline: none;
+  width: 250px;
+  transition: width 0.3s ease;
+  font-size: 0.9em;
+}
+
+.navbar-search input:focus {
+  width: 400px;
+  background-color: #f3e5f5; /* Light purple on focus */
+}
+
+.navbar-search button {
+  padding: 8px 14px;
+  background-color: #bb86fc; /* Light purple for button */
+  color: #fff;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.3s ease, transform 0.2s;
+}
+
+.navbar-search button:hover {
+  background-color: #7E22CE;
+  transform: scale(1.05);
+}
+.position-relative {
+  position: relative;
+}
+
+
+.badge {
+  position: absolute;
+  top: -5px;
+  right: -10px;
+  background-color: red;
+  color: white;
+  border-radius: 50%;
+  padding: 3px 6px;
+  font-size: 12px;
+}
+
+
+@media (max-width: 768px) {
+  .navbar .form-inline .search-bar {
+    width: 100%;
+  }
+}
+@media (max-width: 992px){
+  .nav-icon{
+    display: flex;
+    flex-direction: row;
+  }
+}
+
+/* main section */
+.main-sec{
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+}
+
+
+/* post */
+.post{
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+
+}
+.post__media {
+  border-radius: 5px;
+  margin-top: 5px;
+}
+
+/* .post__button img {
+  width: 24px;
+  height: 24px;
+} */
+.posts{
+  width: 100%;
+}
+.post__buttons{
+  display: flex;
+  justify-content: space-between
+
+}
+.comment-save{
+  display: flex;
+}
+/* Responsive post styling for small screens */
+@media (max-width: 768px) {
+  .posts {
+      width: 100%; /* Set post width to 100% on smaller screens */
+      padding: 0 10px; /* Add padding to prevent overflow on edges */
+  }
+
+  .post__header,
+  .post__footer {
+      padding: 0.5rem; /* Adjust padding for header and footer */
+  }
+
+  .post__content img {
+      max-width: 100%; /* Make sure images are responsive */
+      height: auto;
+  }
+
+  .post__buttons {
+      display: flex;
+      justify-content: space-between; /* Align buttons more compactly */
+      padding: 0.5rem 0; /* Adjust spacing */
+  }
+
+  /* Adjust font size for smaller screens */
+  .post__user,
+  .post__description,
+  .post__date-time {
+      font-size: 0.9rem;
+  }
+
+  /* Space and adjust icon sizes */
+  .post__button i {
+      font-size: 1rem;
+  }
+}
+
+/* suggestions */
+
+
+.main-content {
+  flex: 1; /* Takes up available space */
+}
+
+.suggestions {
+  width: 250px; /* Fixed width for suggestion box */
+  max-height: 80vh;
+  overflow-y: auto;
+  
+}
+
+.suggestion-item {
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+}
+
+/* Media query to hide suggestions on mobile */
+@media (max-width: 768px) {
+  .suggestions {
+      display: none;
+  }
+}
+.sug-head{
+  color: #7E22CE;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.Profile-pic{
+  width: 100px;
+  height: 100px;
+}
+.suggestion-avatar{
+  width: 40px;
+  height: 40px;
+}
+@media (max-width: 768px) {
+  .suggestion {
+      display: none;
+  }
+}
+
+
+
+/* Default color for the icon */
+.heart {
+  width: 50px;
+  height: 45px;
+  background: url("https://cssanimation.rocks/images/posts/steps/heart.png") no-repeat;
+  background-position: -23px -25px;
+  cursor: pointer;
+  transition: background-position 1s steps(28);
+  transition-duration: 0s;
+  
+  &.is-active {
+    transition-duration: 1s;
+    background-position: -2822px -23px;  
+  }
+}
+
+
+.placement {
+  position: fixed;
+  top: 50%; 
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+/* saved */
+.save-button i {
+  transition: color 0.3s ease, transform 0.3s ease; /* Smooth color change */
+}
+
+.save-button i:hover {
+  transform: scale(1.1); /* Slight enlargement on hover */
+}

@@ -1,0 +1,63 @@
+{% extends "partials/base.html" %}
+{% load static %}
+
+{% block content %}
+<h2 class="my-3 mx-auto text-center" style="color:#7D22CE; font-weight:bold;">Notifications</h3>
+<div id="notification-container"></div>
+{% for notification in notify_list %}
+    <div class="container d-flex flex-row align-items-cente justify-conten-space-around my-3 border-bottom">
+        <section class="d-flex">
+            <img id="notification-pic" src="{{notification.user.profile.image.url}}" alt="" class="rounded-circle" width="75px" height="75px">
+        </section>
+        <section class="d-flex flex-column flex-lg-fill mx-4">
+            <b id="notification-type">Notification : {{notification.notification_type}}</b>
+            <span id="notification-message">{{notification.message|safe}}</span>
+            <span id="notification-message">{{notification.created_at}}</span>
+        </section>
+    </div>
+{% endfor %}
+<!-- Empty div to hold real-time notifications -->
+<script>
+const socket = new WebSocket(
+    (window.location.protocol === "https:" ? "wss://" : "ws://") + 
+    window.location.host + 
+    `/ws/notifications/`
+);
+
+socket.onmessage = function (event) {
+    const data = JSON.parse(event.data);
+    showNotification(data.image, data.notification_type, data.message);
+};
+
+function showNotification(image, type, message) {
+    const notificationContainer = document.getElementById("notification-container");
+
+    if (!notificationContainer) {
+        console.error("Notification container not found!");
+        return;
+    }
+
+    const notificationDiv = document.createElement("div");
+    notificationDiv.classList.add("container", "d-flex", "flex-row", "align-items-center", "justify-content-start", "mt-2");
+
+    notificationDiv.innerHTML = `
+        <section class="d-flex">
+            <img src="${image}" alt="User Profile" class="rounded-circle" width="75px" height="75px">
+        </section>
+        <section class="d-flex flex-column flex-lg-fill mx-4">
+            <b>Notification: ${type}</b>
+            <span>${message}</span>
+        </section>
+    `;
+
+    notificationContainer.prepend(notificationDiv);
+
+}
+
+document.addEventListener("DOMContentLoaded", function () {
+        // Clear unread notification count when visiting the notification list page
+        localStorage.removeItem("unread_notification_count");
+    });
+</script>
+
+{% endblock content %}

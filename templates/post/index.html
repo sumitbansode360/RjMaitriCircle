@@ -1,0 +1,140 @@
+{% extends "partials/base.html" %}
+{% load static %}
+{% block content %}
+<div class="container-fluid">
+   <div class="row">
+      <div class="col-sm-7">
+         <!-- story -->
+         <div class="my-4 d-flex">
+            <!-- Main Content Section for Stories and Posts -->
+            <div class="main-content flex-grow-1">
+               <div class="row justify-content-center">
+                  <!-- Stories Section -->
+                  
+                  {% comment %} new story {% endcomment %}
+                  
+                  <!-- Posts Section -->
+               </div>
+            </div>
+            <!-- Suggestions Section -->
+         </div>
+         <!-- story ends -->
+         <!-- post  -->
+         <div class="container-md">
+            {% for post in post_items %}
+        
+            <div class="posts border-bottom">
+               <article class="post mb-4">
+                  <div class="post__header d-flex justify-content-between align-items-center">
+                     <div class="post__profile d-flex align-items-center">
+                        <a href="{% url "ProfileView" post.user %}" class="post__avatar">
+                        <img src="{{post.user.profile.image.url}}" alt="User Picture" class="rounded-circle mx-2 my-2"
+                           width="50px" height="50px" style="object-fit: cover;">
+                        </a>
+                        <a href="{% url "ProfileView" post.user %}" class="post__user ms-2">{{post.user.username}}</a>
+                     </div>
+                  </div>
+                  <a href="{% url "PostDetail" post.post_id %}">
+                    <div class="post__content mx-2">
+                        <div class="post__medias">
+                            <img class="post__media img-fluid" src="{{post.image.url}}" alt="Post Content" style="object-fit: cover;">
+                        </div>
+                    </div>
+                    </a>
+                  <div class="post__footer mx-2">
+                     <div class="post__buttons">
+                        <div class="post-like" id="post-{{ post.id }}">
+                           <a href="{% url 'PostLike' post.post_id %}">
+                               <div 
+                                   class="heart {% if user in post.liked_by.all %}is-active{% endif %}" 
+                                   data-toggle="tooltip" 
+                                   data-placement="top" 
+                                   title="Like this post">
+                               </div>
+                           </a>
+                           <span class="like-count mx-2">{{ post.likes }} Likes</span>
+                       </div>
+                       
+                        <div class="comment-save mx-3 my-2">
+                           <a href="{% url "PostDetail" post.post_id %}#commentSection" class="post__button mx-3">
+                              <i class="fa-regular fa-comment fa-xl" style="color: #7E22CE;" data-toggle="tooltip" data-placement="top" title="Add a comment"></i>
+                           </a>
+                           <a href="{% url 'SavedPost' post.post_id %}" class="post__button save-button ms-auto" data-post-id="{{ post.id }}">
+                              <i class="fa-bookmark fa-xl {% if post in profile.saved.all %}fa-solid{% else %}fa-regular{% endif %}" style="color: #7E22CE;" data-toggle="tooltip" data-placement="top" title="Save this post"></i>
+                              <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+                            </a>                            
+                        </div>
+                     </div>
+                     <div class="post__infos ">
+                        <div class="post__likes">
+                           <span>Liked by - 
+                              {% for user in post.liked_by.all %}
+                                {% if user != request.user %}
+                                  <a class="post__name--underline" href="{% url 'ProfileView' user.username %}">{{ user.username }}</a>, 
+                                {% endif %}
+                              {% endfor %}
+                            </span>
+                        </div>
+                        <div class="post__description mt-1">
+                           <span>
+                           <a class="post__name--underline" href="#"><b>@{{post.user.username}}</b></a> - {{post.caption|safe}}
+                           </span>
+                        </div>
+                        <span style="font-size: 13px;">
+                        {% for tag in post.tag.all %}
+                        <a href="{{tag.get_absolute_url}}" style="color: black; text-decoration: none;">#{{tag.title}}</a>
+                        {% endfor %}
+                        </span>
+                        <span class="post__date-time d-block mt-1">{{post.posted | date:"d, M Y"}}</span>
+                     </div>
+                  </div>
+               </article>
+            </div>
+            <br>
+            {% empty %}
+            <div class="container text-center p-5 bg-light border rounded-4 shadow-lg mt-4">
+               <h2 class="fw-bold text-primary display-4">Your Feed is Empty! 📭</h2>
+               <p class="fs-4 text-dark mt-2">Start following users to see their latest posts and updates.</p>
+           </div>
+            {% endfor %}
+         </div>
+         <!-- post ends -->
+      </div>
+      {% comment %} suggestion {% endcomment %}
+      <div class="col-sm-5" style="max-width: 31.667%;">
+         <div class="container suggestion mt-5 mr-3">
+            <div class="sug-head">
+               <a href="{% url "ProfileView" request.user %}"><img src="{{profile.image.url}}" alt="Profile Picture" class="Profile-pic rounded-circle me-2"></a>
+               <h4>Sugestions</h4>
+               <h5>users you can folllow them</h5>
+            </div>
+            <!-- Suggestion Item 1 -->
+            {% for profile in all_profile %}
+               <div class="suggestion-item d-flex justify-content-between align-items-center">
+                  <div class="suggestion-profile d-flex align-items-center">
+                     <!-- Profile Picture -->
+                     <a href="{% url "ProfileView" profile.user %}"><img src="{{ profile.image.url }}" alt="Profile Picture" class="suggestion-avatar rounded-circle me-2"></a>
+
+                     <!-- Full Name and Username -->
+                     <div class="ml-2">
+                        <a href="{% url "ProfileView" profile.user %}"><span class="suggestion-username d-block font-weight-bold" style="color:#7D22CE;  text-decoration:none;">{{ profile.full_name }}</span></a>
+                           <span class="suggestion-username text-muted">@{{ profile.user.username }}</span>
+                     </div>
+                  </div>
+                  <!-- Follow/Unfollow Button -->
+                  {% if profile.follow_status %}
+                     <a href="{% url 'FollowView' profile.user.username 0 %}">
+                           <button class="follow-btn btn btn-link">UnFollow</button>
+                     </a>
+                  {% else %}
+                     <a href="{% url 'FollowView' profile.user.username 1 %}">
+                           <button class="follow-btn btn btn-link">Follow</button>
+                     </a>
+                  {% endif %}
+               </div>
+            {% endfor %}
+
+         </div>
+      </div>
+   </div>
+{% endblock content %}
