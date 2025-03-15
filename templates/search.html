@@ -15,9 +15,10 @@
           <div class="user-info ms-3 mx-3">
             <a style="color:#7D22CE" href="{% url "ProfileView" user %}" class="user-name fw-bold d-block"><h5>{{user.profile.full_name}}</h5></a>
             <span class="user-username text-muted">@{{user.username}}</span><br>
-            <span>{{user.profile.bio|truncatechars:70}}</span>
+            <span>{{user.profile.bio|truncatechars:70|safe}}</span>
           </div>
         </div>
+        <hr>
       {% endfor %}
       <!-- User Card - Repeat as needed -->
     </div>

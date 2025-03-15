@@ -23,7 +23,43 @@
                                 </a>
                                 <a href="{% url "ProfileView" post.user %}" class="post__user ms-2">{{post.user.username}}</a>
                             </div>
-                {% comment %} more {% endcomment %}
+                            <div class="dropdown">
+                                <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" 
+                                   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                </a>
+                            
+                                <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                                    <a class="dropdown-item" href="{% url 'edit_post' post.post_id %}">
+                                        <i class="fas fa-edit"></i> Edit
+                                    </a>
+                                    <a href="" class="text-decoration-none" data-toggle="modal" data-target="#deleteModal" 
+                                    data-delete-url="{% url 'delete_post' post.post_id %}">
+                                        <button class="dropdown-item">
+                                            <i class="fas fa-trash-alt"></i> Delete
+                                        </button>
+                                    </a>
+                                </div>
+                                 <!-- Bootstrap Modal for Delete Confirmation -->
+                                 <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="deleteModalLabel">Confirm Deletion</h5>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                Are you sure you want to delete this post? This action cannot be undone.
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                                <a href="#" id="confirmDelete" class="btn btn-danger">Delete</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>                            
                         </div>
 
                         <div class="post__content">
@@ -187,6 +223,17 @@
                 });
             {% endfor %}
         {% endif %}
+
+        
+        $(document).ready(function(){
+            $('#deleteModal').on('show.bs.modal', function (event) {
+                var button = $(event.relatedTarget); // Button that triggered the modal
+                var deleteUrl = button.data('delete-url'); // Extract delete URL from data attribute
+                $('#confirmDelete').attr('href', deleteUrl); // Set the delete URL to the confirmation button
+            });
+        });
+
+
     </script>
 
 

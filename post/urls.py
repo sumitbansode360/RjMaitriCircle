@@ -1,5 +1,5 @@
 from django.urls import path
-from post.views import index, NewPost, PostDetail, PostLike, SavedPost, postComment, PostTag
+from post.views import index, NewPost, PostDetail, PostLike, SavedPost, postComment, PostTag, UpdatePost, DeletePost
 
 urlpatterns = [
     path('index/', index, name="index"),
@@ -9,7 +9,8 @@ urlpatterns = [
     path('saved/<post_id>/', SavedPost, name="SavedPost"),
     path('post-comment/<str:post_id>/', postComment, name='postComment'),
     path('tags/<slug:tag_slug>/', PostTag, name='tags'),
-
+    path('post/delete/<post_id>/', DeletePost, name="delete_post"),
+    path('post/edit/<post_id>/', UpdatePost, name="edit_post"),
 
 ]
 

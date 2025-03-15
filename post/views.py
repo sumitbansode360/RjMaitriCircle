@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect, HttpResponseRedirect
+from django.http import HttpResponseForbidden
 from post.models import Post, Stream, Like, Follow, Tag, Like
 from post.forms import NewPostModelForm
 from django.urls import reverse
@@ -12,6 +13,7 @@ from collections import defaultdict
 from channels.layers import get_channel_layer
 from notification.models import Notification
 from asgiref.sync import async_to_sync
+from django.db.utils import IntegrityError
 
 def index(request):
     user = request.user
@@ -223,3 +225,54 @@ def PostTag(request, tag_slug):
 
     }
     return render(request, 'post/tag.html', context)
+
+def UpdatePost(request, post_id):
+    post = get_object_or_404(Post, post_id=post_id, user=request.user)  # Ensure user owns the post
+    tag_obj = list(post.tag.all())  # Keep existing tags
+
+    if request.method == "POST":
+        form = NewPostModelForm(request.POST, request.FILES, instance=post)
+        if form.is_valid():
+            post = form.save(commit=False)
+            tag_form = form.cleaned_data.get('tag')
+
+            # Handle tag input safely
+            tag_list = tag_form.split(",") if tag_form else []  
+
+            for tag in tag_list:
+                tag = tag.strip()
+                if not tag:
+                    continue  # Skip empty tags
+
+                existing_tag = Tag.objects.filter(title=tag).first()
+                if existing_tag:
+                    tag_obj.append(existing_tag)
+                else:
+                    try:
+                        new_tag = Tag.objects.create(title=tag)
+                        tag_obj.append(new_tag)
+                    except IntegrityError:
+                        continue  # Skip duplicate errors
+
+            post.save()  # Save post before setting tags
+            post.tag.set(tag_obj)
+            return redirect("PostDetail", post_id=post.post_id)
+    else:
+        # Pre-fill form with existing tags
+        existing_tags = ", ".join([tag.title for tag in post.tag.all()])
+        form = NewPostModelForm(instance=post, initial={'tag': existing_tags})  
+
+    context = {
+        'form': form,
+        'post': post
+    }
+    return render(request, 'post/post-update.html', context)  # Use update_post.html
+
+def DeletePost(request, post_id):
+    post = get_object_or_404(Post, post_id=post_id)
+
+    if request.user != post.user:  # Ensure only the owner can delete
+        return HttpResponseForbidden("You are not allowed to delete this post.")
+    
+    post.delete()
+    return redirect("index")  # Redirect to home or posts page

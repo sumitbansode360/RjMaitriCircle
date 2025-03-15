@@ -1,0 +1,31 @@
+{% extends "partials/base.html" %}
+{% load static %}
+{% block content %}
+{{ form.media }} 
+<div class="container py-5">
+  <div id="wrapper" class="new-post-sec my-5">
+    <div class="container">
+      <div class="form-data">
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+          <div class="logo">Create Post</div>
+          
+          <!-- Image Input -->
+          {{form.image}}
+
+          <!-- Caption Input -->
+          {{form.caption|safe}}
+
+          <!-- Tag Input -->
+          {{form.tag}}
+
+          <!-- Submit Button -->
+          <button class="form-btn" type="submit">Update Post</button>
+          <a href="{% url 'PostDetail' post.id %}" class="btn btn-secondary">Cancel</a>
+        </form>
+      </div>
+    </div>
+</div>
+</div>   
+    
+{% endblock content %}
