@@ -1,110 +1,44 @@
 /* Main container styling */
 .search-results-card {
-  max-width: 500px; /* Increased for better appearance on tablets */
-  margin: 0 auto;
-  background-color: #ffffff;
-  border: 1px solid #dcdcdc;
-  border-radius: 8px;
-  padding: 1rem;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-/* User card styling */
-.user-card {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  padding: 1rem;
-  border: 1px solid rgba(192, 192, 192, 0.514);
-  background-color: #f9f9f9;
-  border-radius: 6px;
-  transition: transform 0.2s ease-in-out;
-}
-
-.user-card:hover {
-  transform: scale(1.02);
-}
-
-/* User avatar */
-.user-avatar img {
-  width: 60px; /* Slightly increased for better visibility */
-  height: 60px;
-  border-radius: 50%;
-  border: 2px solid #6a0dad; /* Vibrant purple */
-  object-fit: cover;
-}
-
-/* User details */
-.user-info {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-}
-
-.user-name {
-  font-size: 1.1rem;
-  color: black;
-  text-decoration: none;
-  font-weight: 600;
-}
-
-.user-name:hover {
-  color: #6a0dad;
-}
-
-.user-username {
-  font-size: 0.9rem;
-  color: #6a0dad;
-}
-
-/* Responsive Adjustments */
-@media (max-width: 768px) {
-  .search-results-card {
-    max-width: 100%;
-    padding: 1rem;
+    max-width: 400px;
+    margin: 0 auto;
+    background-color: #ffffff;
+    border: 1px solid #dcdcdc;
   }
-
+  
+  /* User card styling */
   .user-card {
-    flex-direction: column;
-    align-items: flex-start;
-    text-align: left;
-    padding: 1rem;
+    border: 1px solid rgba(192, 192, 192, 0.514);
+    background-color: #f9f9f9;
   }
-
+  
   .user-avatar img {
-    width: 50px;
-    height: 50px;
+    border: 2px solid #6a0dad; /* Vibrant purple */
   }
-
-  /* Hide profile bio on smaller screens */
-  #prof-bio {
-    display: none !important;
-  }
-}
-
-@media (max-width: 480px) {
-  .search-results-card {
-    padding: 0.5rem;
-  }
-
-  .user-card {
-    padding: 0.8rem;
-    gap: 0.5rem;
-    display: flex;  
-    
-  }
-
-  .user-avatar img {
-    width: 45px;
-    height: 45px;
-    display: flex;
-  }
-
+  
   .user-name {
     font-size: 1rem;
+    color: black;
+    text-decoration: none;
   }
-
+  
+  .user-name:hover {
+    color: #6a0dad;
+  }
+  
   .user-username {
-    font-size: 0.85rem;
+    font-size: 0.9rem;
+    color: #6a0dad;
   }
-}
+  
+  /* Responsive adjustments */
+  @media (max-width: 576px) {
+    .search-results-card {
+      padding: 1rem;
+    }
+    .user-card {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  }
+  

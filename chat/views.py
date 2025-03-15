@@ -91,7 +91,7 @@ def chat_view(request, chatroom_name='public'):
 
     return render(request, 'chat/chat.html', context)
 
-@login_required
+
 def get_or_create_chatroom(request, username):
     if request.user.username == username:
         return redirect('home')
@@ -113,7 +113,6 @@ def get_or_create_chatroom(request, username):
         
     return redirect('chatroom', chatroom.group_name)
 
-@login_required
 def chat_file_upload(request, chatroom_name):
     chat_group = get_object_or_404(ChatGroup, group_name=chatroom_name)
 
@@ -126,7 +125,7 @@ def chat_file_upload(request, chatroom_name):
         )
         channel_layer = get_channel_layer()
         event = {
-            'type' : 'message_handler',
+            'type' : 'messsage_handler',
             'message_id' : message.id,
         }
         async_to_sync(channel_layer.group_send)(

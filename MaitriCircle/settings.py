@@ -11,13 +11,6 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 from pathlib import Path
-from environ import Env
-env = Env()
-Env.read_env()
-
-ENVIRONMENT = env('ENVIRONMENT', default="production")
-ENVIRONMENT = "production"
-
 import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -28,15 +21,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = env('SECRET_KEY')
+SECRET_KEY = 'django-insecure-dwsr51&jaxxlig9r3^_5tr1i2a3@7oeyms1$d(stkdr@#8#pxj'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-if ENVIRONMENT == "development":
-    DEBUG = True
-else:
-    DEBUG = False
+DEBUG = True
 
-ALLOWED_HOSTS = ["27.0.0.1", "localhost", "*"]
+ALLOWED_HOSTS = []
 
 
 # Application definition
@@ -106,33 +96,13 @@ TEMPLATES = [
 ASGI_APPLICATION = 'MaitriCircle.asgi.application'
 
 CHANNEL_LAYERS = {
-        "default": {
-            "BACKEND": "channels.layers.InMemoryChannelLayer"
-        }
+    "default": {
+        "BACKEND": "channels.layers.InMemoryChannelLayer"
     }
-# if ENVIRONMENT == "development":
-
-#     CHANNEL_LAYERS = {
-#         "default": {
-#             "BACKEND": "channels_redis.core.RedisChannelLayer",
-#             "CONFIG": {
-#                 "hosts": [("redis://default:ipZhKkFyDuNVNXKRNCReeRdFrCPJbZgW@redis.railway.internal:6379")],
-#             },
-#         },
-#     }
-# else:
-#     CHANNEL_LAYERS = {
-#         "default": {
-#             "BACKEND": "channels.layers.InMemoryChannelLayer"
-#         }
-#     }
-
-
+}
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
-
-print("DATABASE_URL:", os.getenv('DATABASE_URL'))
 
 DATABASES = {
     'default': {
@@ -141,11 +111,6 @@ DATABASES = {
     }
 }
 
-
-import dj_database_url
-USE_LOCAL_POSTGRES = False
-if ENVIRONMENT == "production" or USE_LOCAL_POSTGRES == True:
-    DATABASES['default'] = dj_database_url.parse(env('DATABASE_URL'))
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
@@ -366,5 +331,6 @@ CKEDITOR_5_CONFIGS = {
     }
 }
 
-LOGIN_URL = '/user/sign-in/'
+
+LOGIN_REDIRECT_URL = 'index/'
 LOGOUT_REDIRECT_URL = '/user/sign-in/'

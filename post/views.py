@@ -12,13 +12,12 @@ from collections import defaultdict
 from channels.layers import get_channel_layer
 from notification.models import Notification
 from asgiref.sync import async_to_sync
-from django.db import IntegrityError
-from django.http import HttpResponseForbidden
-from django.contrib.auth.decorators import login_required
 
-@login_required
 def index(request):
-    user = request.user    
+    user = request.user
+    if not user.is_authenticated:
+        return redirect('sign-in') 
+    
     profile = Profile.objects.get(user=user)
 
     posts = Stream.objects.filter(user=user)
@@ -45,7 +44,6 @@ def index(request):
 
     return render(request, 'post/index.html', context)
 
-@login_required
 def NewPost(request):
     user = request.user.id
     tag_obj = []
@@ -64,7 +62,7 @@ def NewPost(request):
             p , created = Post.objects.get_or_create(image=image, caption=caption, user_id=user)
             p.tag.set(tag_obj)
 
-            return redirect("PostDetail", post_id=p.post_id)
+            return redirect("index")
     else:
         form = NewPostModelForm()
     context = {
@@ -73,48 +71,6 @@ def NewPost(request):
 
     return render(request, 'post/new_post.html', context)
 
-@login_required
-def UpdatePost(request, post_id):
-    
-    post = get_object_or_404(Post, id=post_id, user=request.user)  # Ensure user owns the post
-    tag_obj = []
-
-    if request.method == "POST":
-        form = NewPostModelForm(request.POST, request.FILES, instance=post)
-        if form.is_valid():
-            post = form.save(commit=False)  # Save form but don’t commit yet
-            tag_form = form.cleaned_data.get('tag')
-
-            # Handle tag input safely
-            tag_list = tag_form.split(",") if tag_form else []  
-
-            for tag in tag_list:
-                tag = tag.strip()  # Remove extra spaces
-                if not tag:
-                    continue  # Skip empty tags
-
-                try:
-                    t, created = Tag.objects.get_or_create(title=tag)
-                    tag_obj.append(t)
-                except IntegrityError:
-                    continue  # Skip duplicate errors
-
-            post.save()  # Save post before setting tags
-            post.tag.set(tag_obj)  # Update the many-to-many relationship
-            messages.success(request, "Post updated!")
-            return redirect("PostDetail", post_id=post.post_id)
-    else:
-        # Convert existing tags to a comma-separated string for pre-filling the form
-        existing_tags = ", ".join([tag.title for tag in post.tag.all()])
-        form = NewPostModelForm(instance=post, initial={'tag': existing_tags})  
-
-    context = {
-        'form': form,
-        'post': post
-    }
-    return render(request, 'post/new_post.html', context)
-
-@login_required
 def PostDetail(request, post_id):
     user = request.user
     post = Post.objects.get(post_id=post_id)
@@ -138,17 +94,6 @@ def PostDetail(request, post_id):
     }
 
     return render(request, "post-detail.html", context)
-
-@login_required
-def DeletePost(request, post_id):
-    post = get_object_or_404(Post, id=post_id)
-
-    if request.user != post.user:  # Ensure only the owner can delete
-        return HttpResponseForbidden("You are not allowed to delete this post.")
-    
-    post.delete()
-    messages.success(request, "Post deleted!")
-    return redirect("index")  # Redirect to home or posts page
 
 def PostLike(request, post_id):
     if request.method == "POST":
@@ -195,7 +140,6 @@ def PostLike(request, post_id):
         })
     return JsonResponse({"error": "Invalid request"}, status=400)
 
-@login_required
 def SavedPost(request, post_id):
     if request.method == "POST":
         user = request.user
@@ -217,7 +161,6 @@ def SavedPost(request, post_id):
 
     return JsonResponse({"error": "Invalid request method."}, status=400)
 
-@login_required
 def postComment(request, post_id):
     if request.method == 'POST':
         comment_text = request.POST.get('comment')
@@ -269,7 +212,7 @@ def postComment(request, post_id):
 
     return redirect('index')
 
-@login_required
+
 def PostTag(request, tag_slug):
     tag = get_object_or_404(Tag, slug=tag_slug)
     posts = Post.objects.filter(tag=tag).order_by('-posted')

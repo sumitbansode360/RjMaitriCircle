@@ -9,7 +9,7 @@ class PostComment(models.Model):
     sno = models.UUIDField(primary_key=True,default=uuid.uuid4,editable=False)
     comment = models.TextField()
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    post = models.ForeignKey(Post,on_delete=models.CASCADE, related_name="comments") 
+    post = models.ForeignKey(Post,on_delete=models.CASCADE) 
     parent = models.ForeignKey('self',on_delete=models.CASCADE,null=True)
     timestamp = models.DateTimeField(default=now)
 

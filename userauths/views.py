@@ -107,7 +107,7 @@ def LogOutView(request):
     messages.success(request,"You are log out!")
     return redirect('sign-in')
 
-@login_required
+
 def ProfileView(request, username):
 
     user = get_object_or_404(User, username=username)
@@ -145,7 +145,6 @@ def ProfileView(request, username):
 
     return render(request, 'userauths/profile.html', context)
 
-@login_required
 def FollowView(request, username, option):
     user = request.user
     if not user.is_authenticated:
@@ -163,7 +162,7 @@ def FollowView(request, username, option):
             Stream.objects.filter(user=user, following=following).delete()
         else:
             # Follow logic
-            posts = Post.objects.filter(user=following or None)
+            posts = Post.objects.filter(user=following)
             with transaction.atomic():
                 for post in posts:
                     Stream.objects.create(
@@ -224,7 +223,6 @@ def EditProfileView(request):
     }
     return render(request, 'userauths/edit-profile.html', context)
 
-@login_required
 def Follower_List(request, username):
     user_profile = Profile.objects.get(user__username=username)
     
@@ -237,7 +235,6 @@ def Follower_List(request, username):
     }
     return render(request, 'follows/followers.html', context)
 
-@login_required
 def Following_List(request, username):
 
     user_profile = Profile.objects.get(user__username=username)
@@ -252,7 +249,7 @@ def Following_List(request, username):
 
     return render(request, 'follows/following.html', context)
 
-@login_required
+
 def Search(request):
     context = { }
     user = User.objects.all()

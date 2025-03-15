@@ -93,6 +93,9 @@ body{
     flex-direction: row;
   }
 }
+body {
+  background-color: #f8f9fa; /* Light background for contrast */
+}
 
 /* main section */
 .main-sec{
@@ -227,6 +230,9 @@ body{
   }
 }
 
+body {
+  background: #000000;
+}
 
 .placement {
   position: fixed;
