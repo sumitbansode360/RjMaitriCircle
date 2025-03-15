@@ -27,7 +27,7 @@
 {% block content %}
 <div class="container msg-body p-0" style="max-width: 100%;">
 
-    <h1 class="h3 mb-3 text-center" style="color: #6a0dad">Messages</h1>
+    <div class="logo my-4">Messages</div>
   
     <div class="card">
         <div class="row no-gutters">
@@ -55,7 +55,7 @@
                                     <img src="{{member.profile.image.url}}" class="rounded-circle mr-1" alt="User" width="40" height="40">
                                     <div class="flex-grow-1 ml-3">
                                         <b>{{ member.profile.full_name }}</b>
-                                       <div class="small text-muted">@{{member.username}}</div>
+                                       <div class="small">@{{member.username}}</div>
                                     </div>
                                     {% with unread_count=unread_message_counts|get_item:member.id %}
                                     {% if unread_count and unread_count > 0 %}

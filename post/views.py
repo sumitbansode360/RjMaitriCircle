@@ -256,6 +256,7 @@ def UpdatePost(request, post_id):
 
             post.save()  # Save post before setting tags
             post.tag.set(tag_obj)
+            messages.success(request, "Post updated successfully!")
             return redirect("PostDetail", post_id=post.post_id)
     else:
         # Pre-fill form with existing tags
@@ -275,4 +276,5 @@ def DeletePost(request, post_id):
         return HttpResponseForbidden("You are not allowed to delete this post.")
     
     post.delete()
+    messages.success(request, "Post deleted successfully!")
     return redirect("index")  # Redirect to home or posts page
