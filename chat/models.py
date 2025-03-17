@@ -1,8 +1,10 @@
+from cloudinary.models import CloudinaryField
 from django.db import models
 from django.conf import settings  # Import settings to use AUTH_USER_MODEL
 from userauths.models import User
 import shortuuid
 import os
+
 # Create your models here.
 
 class ChatGroup(models.Model):
@@ -18,13 +20,16 @@ class GroupMessage(models.Model):
     group = models.ForeignKey(ChatGroup, related_name='chat_messages', on_delete=models.CASCADE)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete= models.CASCADE)
     body = models.CharField(max_length=3000, blank=True, null=True)
-    file = models.FileField(upload_to='files/', blank=True, null=True)
+    file = CloudinaryField("file", blank=True, null=True)  
     created = models.DateTimeField(auto_now_add=True)
     is_read = models.BooleanField(default=False)
     
     @property
     def filename(self):
-        return os.path.basename(self.file.name)
+        if self.file:
+            return self.file.public_id.split("/")[-1] 
+        return None
+
     
     def __str__(self):
         if self.body:
@@ -37,7 +42,7 @@ class GroupMessage(models.Model):
 
     @property
     def is_image(self):
-        if self.filename.lower().endswith(('.jpg', '.jpeg', '.png', '.gif', '.svg', '.webp')):
+        if self.file and self.file.resource_type == "image":  # ✅ Cloudinary ke liye correct method
             return True
-        else:
-            return False
+        return False
+

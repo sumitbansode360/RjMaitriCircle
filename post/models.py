@@ -7,12 +7,17 @@ from shortuuid.django_fields import ShortUUIDField
 from django.utils.timezone import now
 from django.conf import settings  # Import settings to use AUTH_USER_MODEL
 from django_ckeditor_5.fields import CKEditor5Field
+from cloudinary.models import CloudinaryField
 
 
 def user_directory_path(instance, filename):
     ext = filename.split(".")[-1]
-    filename = "%s.%s" % (instance.user.id, filename)
-    return "user_{0}/{1}".format(instance.user.id, filename)
+    filename = "%s.%s" % (instance.user.id, ext)  # Ensure proper extension
+
+    # Ensure the path follows Cloudinary's standard
+    return "user_uploads/user_{0}/{1}".format(instance.user.id, filename)  
+
+
 
 class Tag(models.Model):
     title = models.CharField(max_length=1000, verbose_name="Tag")
@@ -35,7 +40,7 @@ class Tag(models.Model):
 
 class Post(models.Model):
     post_id = ShortUUIDField(alphabet="abcdefghijklmnopqrstuvwxyz123", unique=True)
-    image = models.FileField(upload_to=user_directory_path, default="file.jpg", null=True, verbose_name="Profile_pic")
+    image = CloudinaryField("image", null=True, blank=True)  
     caption = CKEditor5Field('Text', config_name='extends')
     posted = models.DateTimeField(auto_now_add=True)
     tag = models.ManyToManyField(Tag, blank=True, help_text="separate with comma")

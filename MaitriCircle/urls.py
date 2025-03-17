@@ -30,5 +30,6 @@ urlpatterns = [
     path('<username>/saved/', ProfileView, name="Saved"),
     path('<username>/follow/<option>/', FollowView, name="FollowView"),
 ]
-urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)  
-urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) 
+if settings.ENVIRONMENT == "development":
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)  
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) 

@@ -88,7 +88,7 @@ def Loginview(request):
 
         try:
             user_query = User.objects.get(email=email)
-            user_auth = authenticate(request, email=email, password=password)
+            user_auth = authenticate(request, username=email, password=password)  # Email as username
             if user_auth is not None:
                 login(request, user_auth)
                 messages.success(request, f"{request.user} you are logged in now!")

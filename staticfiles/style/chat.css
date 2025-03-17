@@ -1,0 +1,83 @@
+/* Custom purple color */
+
+/* Default chat item styling */
+.list-group-item {
+  background-color: #ffffff; /* Clean white background */
+  color: #333; /* Dark text for readability */
+  font-weight: 500;
+  border-radius: 8px;
+  padding: 12px;
+  transition: all 0.3s ease-in-out;
+}
+
+/* Hover effect for better interaction */
+.list-group-item:hover {
+  background-color: #f8f9fa; /* Light hover effect */
+  box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.1); /* Soft shadow on hover */
+}
+
+/* Active chat selection (Highlight effect) */
+.list-group-item.active {
+  background: linear-gradient(135deg, #1c1818, #0056b3); /* Gradient blue */
+  color: white !important;
+  font-weight: bold;
+  border-left: 4px solid #ff9800; /* Accent color */
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.15); /* Soft shadow for depth */
+  transform: scale(1.02); /* Slightly enlarges */
+  transition: all 0.3s ease-in-out;
+}
+
+/* Add slight animation when selected */
+@keyframes fadeIn {
+  from {
+      opacity: 0.5;
+      transform: scale(0.98);
+  }
+  to {
+      opacity: 1;
+      transform: scale(1);
+  }
+}
+.list-group-item.active {
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+
+.btn-purple {
+    background-color: #6a0dad;
+    color: #ffffff;
+    border: none;
+  }
+  
+  .btn-purple:hover {
+    background-color: #5c0cad;
+  }
+  
+  .user-list, .chat-area {
+    background-color: #ffffff;
+    border: 1px solid #dcdcdc;
+  }
+  
+  .user-card img {
+    border: 2px solid #6a0dad;
+  }
+  
+  .border-purple {
+    border-color: #6a0dad !important;
+  }
+  
+  .chat-area img {
+    border: 2px solid #6a0dad;
+  }
+  
+  .chat-area .bg-purple {
+    background-color: #6a0dad;
+  }
+  
+  /* Responsive styling */
+  @media (max-width: 768px) {
+    .user-list, .chat-area {
+      padding: 1rem;
+    }
+  }
+  

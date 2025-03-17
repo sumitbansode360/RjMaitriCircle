@@ -5,6 +5,7 @@ from shortuuid.django_fields import ShortUUID
 from post.models import Post
 from django.conf import settings
 from django_ckeditor_5.fields import CKEditor5Field
+from cloudinary.models import CloudinaryField
 
 GENDER = (
     ('M', 'Male'),
@@ -46,7 +47,7 @@ class User(AbstractUser):
 class Profile(models.Model):
     pid = ShortUUID(alphabet="abcdefghijklmnopqrstuvwxyz123")
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    image = models.FileField(upload_to=user_directory_path, default="images/default.jpg", null=True, blank=True)
+    image = CloudinaryField("image", default="images/default.jpg", null=True, blank=True)
     full_name = models.CharField(max_length=500, null=False, blank=False)
     bio = CKEditor5Field('Text', config_name='extends')
     dob = models.DateField(null=True, blank=True)
