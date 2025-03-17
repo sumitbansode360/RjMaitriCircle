@@ -64,6 +64,7 @@ def NewPost(request):
             p , created = Post.objects.get_or_create(image=image, caption=caption, user_id=user)
             p.tag.set(tag_obj)
 
+            messages.success(request, "Post created successfully!")
             return redirect("index")
     else:
         form = NewPostModelForm()
