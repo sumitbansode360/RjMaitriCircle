@@ -38,7 +38,7 @@ else:
     DEBUG = True
 
 ALLOWED_HOSTS = ["rjmaitricricle.onrender.com"]
-csrf_trusted_origins = ["https://rjmaitricricle.onrender.com"]
+CSRF_TRUSTED_ORIGINS  = ["https://rjmaitricricle.onrender.com"]
 
 
 # Application definition
