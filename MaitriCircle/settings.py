@@ -37,7 +37,8 @@ if ENVIRONMENT == 'development':
 else:
     DEBUG = True
 
-ALLOWED_HOSTS = ["*"]
+ALLOWED_HOSTS = ["rjmaitricricle.onrender.com"]
+csrf_trusted_origins = ["https://rjmaitricricle.onrender.com"]
 
 
 # Application definition
@@ -111,11 +112,22 @@ TEMPLATES = [
 # WSGI_APPLICATION = 'MaitriCircle.wsgi.application'
 ASGI_APPLICATION = 'MaitriCircle.asgi.application'
 
-CHANNEL_LAYERS = {
-    "default": {
-        "BACKEND": "channels.layers.InMemoryChannelLayer"
+if ENVIRONMENT == 'development':
+    CHANNEL_LAYERS = {
+        "default": {
+            "BACKEND": "channels.layers.InMemoryChannelLayer"
+        }
     }
-}
+else:
+    CHANNEL_LAYERS = {
+        "default": {
+            "BACKEND": "channels.layers.RedisChannelLayer",
+            "CONFIG": {
+                "hosts": [env('REDIS_URL')],
+            },
+        }
+    }
+    
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
