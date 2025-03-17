@@ -123,7 +123,7 @@ else:
         "default": {
             "BACKEND": "channels.layers.RedisChannelLayer",
             "CONFIG": {
-                "hosts": [env('REDIS_URL')],
+                "hosts": ["redis://red-cvc29kpc1ekc73b81vmg:6379"],
             },
         }
     }
