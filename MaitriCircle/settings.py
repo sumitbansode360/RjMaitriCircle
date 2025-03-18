@@ -121,12 +121,12 @@ if ENVIRONMENT == 'development':
 else:
     CHANNEL_LAYERS = {
         "default": {
-            "BACKEND": "channels.layers.RedisChannelLayer",
+            "BACKEND": "channels_redis.core.RedisChannelLayer",
             "CONFIG": {
-                "hosts": ["redis://red-cvcfoq5ds78s73aildf0:6379"],
+                "hosts": [(env('REDIS_URL')],
             },
-        }
-    }
+        },
+}
     
 
 # Database
