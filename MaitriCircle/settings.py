@@ -16,7 +16,7 @@ from environ import Env
 env = Env()
 env.read_env()
 
-ENVIRONMENT = env('ENVIRONMENT', default='development')
+ENVIRONMENT = env('ENVIRONMENT', default='production')
 # ENVIRONMENT = "production"
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -126,7 +126,7 @@ else:
                 "hosts": [(env('REDIS_URL'))],
             },
         },
-}
+    }
     
 
 # Database

@@ -1,0 +1,18 @@
+# Ignore Virtual Environment
+.venv/
+venv/
+myenv/
+
+# Ignore Python Cache
+__pycache__/
+*.py[cod]
+
+# Ignore Django Migrations
+*/migrations/
+*/migrations/*.pyc
+
+# Ignore Cloudinary Config (if any)
+cloudinary.cfg
+
+# Ignore Environment Variables
+.env
