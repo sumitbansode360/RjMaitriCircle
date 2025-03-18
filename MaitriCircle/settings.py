@@ -37,9 +37,8 @@ if ENVIRONMENT == 'development':
 else:
     DEBUG = True
 
-ALLOWED_HOSTS = ["rjmaitricricle.onrender.com"]
-CSRF_TRUSTED_ORIGINS  = ["https://rjmaitricricle.onrender.com"]
-
+ALLOWED_HOSTS = ["rjmaitricircle.onrender.com"]
+CSRF_TRUSTED_ORIGINS  = ["https://rjmaitricircle.onrender.com"]
 
 # Application definition
 
