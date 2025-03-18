@@ -220,7 +220,7 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'sumitbansode360@gmail.com'
 EMAIL_HOST_PASSWORD = 'rcju qfaz fbyv gqkv'
-SITE_DOMAIN = "http://127.0.0.1:8000"
+SITE_DOMAIN = "https://rjmaitricircle.onrender.com"
 SITE_NAME = "MaitriCircle"
 
 JAZZMIN_SETTINGS = {
