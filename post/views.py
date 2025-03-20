@@ -61,7 +61,7 @@ def NewPost(request):
                 t , created = Tag.objects.get_or_create(title=tag)
                 tag_obj.append(t)
 
-            p , created = Post.objects.get_or_create(image=image, caption=caption, user_id=user)
+            p = Post.objects.create(image=image, caption=caption, user_id=user)
             p.tag.set(tag_obj)
 
             messages.success(request, "Post created successfully!")
