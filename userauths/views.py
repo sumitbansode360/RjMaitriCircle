@@ -182,7 +182,7 @@ def FollowView(request, username, option):
 
             channel_layer = get_channel_layer()
             async_to_sync(channel_layer.group_send)(
-                f"user_{post.user.id}",  
+                f"user_{following.id}",  
                 {
                     "type" : "send_notification",
                     "notification": {
