@@ -14,6 +14,8 @@ from channels.layers import get_channel_layer
 from notification.models import Notification
 from asgiref.sync import async_to_sync
 from django.db.utils import IntegrityError
+from django.utils.text import slugify 
+
 
 def index(request):
     user = request.user
@@ -58,7 +60,8 @@ def NewPost(request):
             tag_list = list(tag_form.split(","))
 
             for tag in tag_list:
-                t , created = Tag.objects.get_or_create(title=tag)
+                slug = slugify(tag)  # Generate slug beforehand
+                t, created = Tag.objects.get_or_create(slug=slug, defaults={"title": tag})
                 tag_obj.append(t)
 
             p = Post.objects.create(image=image, caption=caption, user_id=user)
