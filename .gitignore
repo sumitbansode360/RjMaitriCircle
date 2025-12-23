@@ -4,8 +4,10 @@ venv/
 myenv/
 
 # Ignore Python Cache
+**/__pycache__/
 __pycache__/
 *.py[cod]
+*.pyc
 
 # Ignore Django Migrations
 */migrations/
