@@ -1,20 +1,41 @@
-# Ignore Virtual Environment
-.venv/
-venv/
-myenv/
-
-# Ignore Python Cache
-**/__pycache__/
+# Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
+*$py.class
 *.pyc
+**/__pycache__/
 
-# Ignore Django Migrations
-*/migrations/
-*/migrations/*.pyc
-
-# Ignore Cloudinary Config (if any)
-cloudinary.cfg
-
-# Ignore Environment Variables
+# Virtual environment
+venv/
 .env
+*.env
+
+# Django specific
+*.log
+db.sqlite3
+/media/
+/static/
+
+# VS Code and IDE-specific files
+.vscode/
+.idea/
+*.iml
+
+# PyCharm specific
+*.pyc
+*.pyo
+
+# Node.js
+node_modules/
+
+# Django Channels specific
+*.sqlite3
+celerybeat-schedule
+
+# Secret files
+config.json
+secrets.json
+
+# Ignore migrations except __init__.py
+*/migrations/*
+!*/migrations/__init__.py
