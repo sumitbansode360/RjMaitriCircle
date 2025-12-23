@@ -13,14 +13,16 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 from pathlib import Path
 import os
 from environ import Env
-env = Env()
-env.read_env()
-
-ENVIRONMENT = env('ENVIRONMENT', default='production')
-# ENVIRONMENT = "production"
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+dot_env_path = BASE_DIR / '.env'
+
+env = Env()
+env.read_env(dot_env_path)
+
+ENVIRONMENT = env('ENVIRONMENT', default='production')
+# ENVIRONMENT = "production"
 
 
 # Quick-start development settings - unsuitable for production
@@ -35,10 +37,10 @@ SECRET_KEY = env('SECRET_KEY')
 if ENVIRONMENT == 'development':
     DEBUG = True
 else:
-    DEBUG = True
+    DEBUG = False
 
-ALLOWED_HOSTS = ["rjmaitricircle.onrender.com"]
-CSRF_TRUSTED_ORIGINS  = ["https://rjmaitricircle.onrender.com"]
+ALLOWED_HOSTS = ["rjmaitricircle.onrender.com", "127.0.0.1"]
+CSRF_TRUSTED_ORIGINS  = ["https://rjmaitricircle.onrender.com", "http://127.0.0.1:8000"]
 
 # Application definition
 
